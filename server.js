@@ -17,4 +17,17 @@ app.get('/', (req, res) => {
 
 app.listen(PORT, () => {
     console.log(`Serveur démarré sur http://localhost:${PORT}`);
+    const imageInput = document.getElementById('imageInput');
+
+imageInput.addEventListener('change', function(event) {
+  const file = event.target.files[0]; // Récupère le premier fichier choisi
+
+  if (file) {
+    const reader = new FileReader();
+
+    reader.onload = function(e) {
+      document.body.style.backgroundImage = `url('${e.target.result}')`;
+    };
+
+    reader.readAsDataURL(file);
 });
