@@ -1,0 +1,12 @@
+{
+  "name": "mon-app-devops",
+  "version": "1.0.0",
+  "description": "Exemple d'application pour pipeline DevOps",
+  "main": "server.js",
+  "scripts": {
+    "start": "node server.js"
+  },
+  "dependencies": {
+    "express": "^4.19.2"
+  }
+}
