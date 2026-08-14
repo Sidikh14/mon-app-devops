@@ -1,7 +1,7 @@
 {
   "name": "mon-app-devops",
   "version": "1.0.0",
-  "description": "Exemple d'application pour pipeline DevOps",
+  "description": "Exemple d'application pour tester DevOps",
   "main": "server.js",
   "scripts": {
     "start": "node server.js"

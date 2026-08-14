@@ -11,7 +11,7 @@ app.get('/', (req, res) => {
                 Status: OK 🟢
             </span>
         </div>
-        <div backgroud-color:red></div>
+        <div style="background-color: red; height: 10px;"></div>)
     `);
 });
 
