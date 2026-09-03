@@ -1,0 +1,91 @@
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+// 1. La Boutique (Tenant)
+model Boutique {
+  id        String   @id @default(uuid())
+  nom       String
+  telephone String?
+  adresse   String?
+  createdAt DateTime @default(now())
+
+  users    User[]
+  produits Produit[]
+  ventes   Vente[]
+}
+
+// 2. Les Utilisateurs (Gérants / Vendeurs)
+model User {
+  id         String   @id @default(uuid())
+  nom        String
+  email      String   @unique
+  motDePasse String
+  role       Role     @default(VENDEUR)
+  boutiqueId String
+  boutique   Boutique @relation(fields: [boutiqueId], references: [id])
+  createdAt  DateTime @default(now())
+}
+
+enum Role {
+  GERANT
+  VENDEUR
+}
+
+// 3. Les Produits (ex: T-shirt Oversize)
+model Produit {
+  id         String     @id @default(uuid())
+  nom        String
+  categorie  String?
+  boutiqueId String
+  boutique   Boutique   @relation(fields: [boutiqueId], references: [id])
+  variantes  Variante[]
+  createdAt  DateTime   @default(now())
+}
+
+// 4. Les Variantes (Taille / Couleur / Prix / Stock)
+model Variante {
+  id          String        @id @default(uuid())
+  taille      String        // S, M, L, XL
+  couleur     String        // Noir, Blanc, Bleu
+  prixAchat   Float
+  prixVente   Float
+  stock       Int           @default(0)
+  produitId   String
+  produit     Produit       @relation(fields: [produitId], references: [id])
+  ligneVentes LigneDeVente[]
+}
+
+// 5. Les Ventes & Factures
+model Vente {
+  id          String         @id @default(uuid())
+  codeFacture String         @unique // ex: FACT-2026-0001
+  total       Float
+  modePaiement ModePaiement  @default(ESPECES)
+  boutiqueId  String
+  boutique    Boutique       @relation(fields: [boutiqueId], references: [id])
+  lignes      LigneDeVente[]
+  createdAt   DateTime       @default(now())
+}
+
+enum ModePaiement {
+  ESPECES
+  CARTE
+  MOBILE_MONEY
+}
+
+// 6. Détail des articles dans chaque facture
+model LigneDeVente {
+  id         String   @id @default(uuid())
+  quantite   Int
+  prixUnitaire Float
+  venteId    String
+  vente      Vente    @relation(fields: [venteId], references: [id])
+  varianteId String
+  variante   Variante @relation(fields: [varianteId], references: [id])
+}
